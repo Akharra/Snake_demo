@@ -149,7 +149,7 @@ def game_over():
 score = 0
 window = tkinter.Tk()  # создаем корневой объект - окно
 canvas = tkinter.Canvas(window, bg='black', height=SIDE, width=SIDE)  # создаем размеры и цвет окна
-label = tkinter.Label(text=f'Score = {score}', font = ('consolas', 40))  # создаем текстовую метку
+label = tkinter.Label(text=f'Score = {score}', font = ('consolas', 50))  # создаем текстовую метку
 # snake
 snake = Snake(window, canvas)  # создаем змейку (экземпляр 'snake' класса 'Snake')
 # food
