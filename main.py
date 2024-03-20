@@ -35,7 +35,20 @@ class Snake:
             self.grow()  # add body part
             label.config(text=f'Score = {score}')   # score update
             food.recreate()  # recreate food
+        elif self.collide_itself():
+            game_over()
+            return
         self.window.after(200, self.move, food)   # автоматическое движение змейки
+
+
+    '''Проверка на столкновение с собой'''
+    def collide_itself(self):
+        head_x, head_y, _, _ = self.canvas.coords(self.body[0])
+        for i in range(1, len(self.body)):
+            x0, y0, _, _ = self.canvas.coords(self.body[i])
+            if head_x == x0 and head_y == y0:
+                return True
+        return False
 
 
     '''Проверка не ушла ли змейка за пределы окна'''
@@ -120,10 +133,23 @@ class Food:
         self.create()
 
 
+'''Завершение игры'''
+def game_over():
+    canvas.delete(tkinter.ALL)
+    canvas.create_text(
+        canvas.winfo_width() // 2,
+        canvas.winfo_height() // 2,
+        text='GAME OVER',
+        fill='red',
+        font = ('consolas', 70),
+        tag='gameover')
+    snake.direction = 'space'
+
+
 score = 0
 window = tkinter.Tk()  # создаем корневой объект - окно
 canvas = tkinter.Canvas(window, bg='black', height=SIDE, width=SIDE)  # создаем размеры и цвет окна
-label = tkinter.Label(text=f'Score = {score}')  # создаем текстовую метку
+label = tkinter.Label(text=f'Score = {score}', font = ('consolas', 40))  # создаем текстовую метку
 # snake
 snake = Snake(window, canvas)  # создаем змейку (экземпляр 'snake' класса 'Snake')
 # food
