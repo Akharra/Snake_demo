@@ -19,8 +19,8 @@ class Snake:
         self.direction_y = 0    # направление движения по y
 
 
-    '''Научим змейку двигаться'''
     def move(self, food):
+        '''Научим змейку двигаться'''
         global score
         if self.direction != 'space':
             for i in range(len(self.body)-1, 0, -1):  # начиная с хвоста (с конца) переносим каждую часть змейки на часть предыдущего хвоста
@@ -41,8 +41,8 @@ class Snake:
         self.window.after(200, self.move, food)   # автоматическое движение змейки
 
 
-    '''Проверка на столкновение с собой'''
     def collide_itself(self):
+        '''Проверка на столкновение с собой'''
         head_x, head_y, _, _ = self.canvas.coords(self.body[0])
         for i in range(1, len(self.body)):
             x0, y0, _, _ = self.canvas.coords(self.body[i])
@@ -51,8 +51,8 @@ class Snake:
         return False
 
 
-    '''Проверка не ушла ли змейка за пределы окна'''
     def fix_overflow(self):
+        '''Проверка не ушла ли змейка за пределы окна'''
         for part in self.body:  # проверяем для каждого элемента змейки
             x0, y0, x1, y1 = self.canvas.coords(part)
             if self.direction == 'Up' and y0 < 0:   # если змейка каснулась верхней границы экрана
@@ -65,8 +65,8 @@ class Snake:
                 self.canvas.move(part, -SIDE, 0)
 
 
-    '''Определим направление движения змейки'''
     def turn(self, event):
+        '''Определим направление движения змейки'''
         if event.keysym == 'Up' and self.direction != 'Down':
             self.direction_x = 0
             self.direction_y = -SNAKE_SIZE
@@ -88,19 +88,18 @@ class Snake:
             self.direction_y = 0
             self.direction = event.keysym   # запоминает что направления нет (это нужно для паузы)
 
-    '''Проверка совпадает ли голова змейки с едой'''
+
     def collide_food(self, food):
-        # нужно плучить координаты головы
-        head_x, head_y, _, _ = self.canvas.coords(self.body[0])
-        # нужно плучить координаты еды
-        food_x, food_y, _, _ = self.canvas.coords(food.circle)
+        '''Проверка совпадает ли голова змейки с едой'''
+        head_x, head_y, _, _ = self.canvas.coords(self.body[0])     # нужно плучить координаты головы
+        food_x, food_y, _, _ = self.canvas.coords(food.circle)      # нужно плучить координаты еды
         if head_x == food_x and head_y == food_y:
             return True
         return False
 
 
-    '''Змейка растет'''
     def grow(self):
+        '''Змейка растет'''
         x0, y0, x1, y1 = self.canvas.coords(self.body[-1])  # берем координаты головы
         new_part = self.canvas.create_rectangle(
             (x0 + self.direction_x, y0 + self.direction_y),
@@ -116,8 +115,8 @@ class Food:
         self.create()   # Рисуем кружок (еду)
 
 
-    '''Создаем кружок (еду)'''
     def create(self):
+        '''Создаем кружок (еду)'''
         number_of_cols = SIDE // SNAKE_SIZE  # 700 x 700 (side x side), 50 snake_size
         x = randint(0, number_of_cols - 1) * SNAKE_SIZE  # Случайная координата по x
         y = randint(0, number_of_cols - 1) * SNAKE_SIZE  # Случайная координата по y
@@ -127,14 +126,14 @@ class Food:
             tag='food')
 
 
-    '''Пересоздаем еду'''
     def recreate(self):
+        '''Пересоздаем еду'''
         self.canvas.delete('food')
         self.create()
 
 
-'''Завершение игры'''
 def game_over():
+    '''Завершение игры'''
     canvas.delete(tkinter.ALL)
     canvas.create_text(
         canvas.winfo_width() // 2,
