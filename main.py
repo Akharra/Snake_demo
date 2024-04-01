@@ -10,8 +10,8 @@ class Snake:
         self.canvas = canvas
         self.body = [
             canvas.create_rectangle(
-            (SIDE//2 - SNAKE_SIZE, SIDE//2 - SNAKE_SIZE),
-            (SIDE//2, SIDE//2),
+            SIDE//2 - SNAKE_SIZE, SIDE//2 - SNAKE_SIZE,
+            SIDE//2, SIDE//2,
             fill = '#00FF00')
         ]
         self.direction = 'space'    # pause
@@ -67,32 +67,76 @@ class Snake:
 
     def turn(self, event):
         '''Определим направление движения змейки'''
-        if event.keysym == 'Up' and self.direction != 'Down':
-            self.direction_x = 0
-            self.direction_y = -SNAKE_SIZE
-            self.direction = event.keysym   # запоминает какое сейчас направление (это нужно для функции fix_overflow)
-        elif event.keysym == 'Down' and self.direction != 'Up':
-            self.direction_x = 0
-            self.direction_y = SNAKE_SIZE
-            self.direction = event.keysym   # запоминает какое сейчас направление (это нужно для функции fix_overflow)
-        elif event.keysym == 'Left' and self.direction != 'Right':
-            self.direction_x = -SNAKE_SIZE
-            self.direction_y = 0
-            self.direction = event.keysym   # запоминает какое сейчас направление (это нужно для функции fix_overflow)
-        elif event.keysym == 'Right' and self.direction != 'Left':
-            self.direction_x = SNAKE_SIZE
-            self.direction_y = 0
-            self.direction = event.keysym   # запоминает какое сейчас направление (это нужно для функции fix_overflow)
-        elif event.keysym == 'space':
-            self.direction_x = 0
-            self.direction_y = 0
-            self.direction = event.keysym   # запоминает что направления нет (это нужно для паузы)
+        if len(self.body) == 1:
+            if event.keysym == 'Up' and self.direction != 'Down':
+                self.direction_x = 0
+                self.direction_y = -SNAKE_SIZE
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'Down' and self.direction != 'Up':
+                self.direction_x = 0
+                self.direction_y = SNAKE_SIZE
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'Left' and self.direction != 'Right':
+                self.direction_x = -SNAKE_SIZE
+                self.direction_y = 0
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'Right' and self.direction != 'Left':
+                self.direction_x = SNAKE_SIZE
+                self.direction_y = 0
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'space':
+                self.direction_x = 0
+                self.direction_y = 0
+                self.direction = event.keysym  # запоминает что направления нет (это нужно для паузы)
+        else:
+            head_x, head_y, _, _ = self.canvas.coords(self.body[0])
+            body_x, body_y, _, _ = self.canvas.coords(self.body[1])
+            if event.keysym == 'Up' and self.direction != 'Down':
+                if self.direction == 'space':
+                    if head_y - body_y == 50 and head_x - body_x == 0:
+                        self.direction_x = 0
+                        self.direction_y = 0
+                        self.direction = 'space'
+                self.direction_x = 0
+                self.direction_y = -SNAKE_SIZE
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'Down' and self.direction != 'Up':
+                if self.direction == 'space':
+                    if body_y - head_y == 50 and head_x - body_x == 0:
+                        self.direction_x = 0
+                        self.direction_y = 0
+                        self.direction = 'space'
+                self.direction_x = 0
+                self.direction_y = SNAKE_SIZE
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'Left' and self.direction != 'Right':
+                if self.direction == 'space':
+                    if head_y - body_y == 0 and head_x - body_x == 50:
+                        self.direction_x = 0
+                        self.direction_y = 0
+                        self.direction = 'space'
+                self.direction_x = -SNAKE_SIZE
+                self.direction_y = 0
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'Right' and self.direction != 'Left':
+                if self.direction == 'space':
+                    if head_y - body_y == 0 and body_x - head_x == 50:
+                        self.direction_x = 0
+                        self.direction_y = 0
+                        self.direction = 'space'
+                self.direction_x = SNAKE_SIZE
+                self.direction_y = 0
+                self.direction = event.keysym  # запоминает какое сейчас направление (это нужно для функции fix_overflow)
+            elif event.keysym == 'space':
+                self.direction_x = 0
+                self.direction_y = 0
+                self.direction = event.keysym  # запоминает что направления нет (это нужно для паузы)
 
 
     def collide_food(self, food):
         '''Проверка совпадает ли голова змейки с едой'''
-        head_x, head_y, _, _ = self.canvas.coords(self.body[0])     # нужно плучить координаты головы
-        food_x, food_y, _, _ = self.canvas.coords(food.circle)      # нужно плучить координаты еды
+        head_x, head_y, _, _ = self.canvas.coords(self.body[0])  # нужно плучить координаты головы
+        food_x, food_y, _, _ = self.canvas.coords(food.circle)  # нужно плучить координаты еды
         if head_x == food_x and head_y == food_y:
             return True
         return False
@@ -125,7 +169,6 @@ class Food:
             fill='red',
             tag='food')
 
-
     def recreate(self):
         '''Пересоздаем еду'''
         self.canvas.delete('food')
@@ -138,10 +181,9 @@ def game_over():
     canvas.create_text(
         canvas.winfo_width() // 2,
         canvas.winfo_height() // 2,
+        font=('consolas', 50),
         text='GAME OVER',
-        fill='red',
-        font = ('consolas', 70),
-        tag='gameover')
+        fill='red')
     snake.direction = 'space'
 
 
