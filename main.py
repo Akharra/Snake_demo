@@ -12,8 +12,7 @@ class Snake:
             canvas.create_rectangle(
             SIDE//2 - SNAKE_SIZE, SIDE//2 - SNAKE_SIZE,
             SIDE//2, SIDE//2,
-            fill = '#00FF00')
-        ]
+            fill = '#00FF00')]
         self.direction = 'space'    # pause
         self.direction_x = 0    # направление движения по x
         self.direction_y = 0    # направление движения по y
@@ -169,6 +168,7 @@ class Food:
             fill='red',
             tag='food')
 
+    
     def recreate(self):
         '''Пересоздаем еду'''
         self.canvas.delete('food')
